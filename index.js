@@ -177,20 +177,152 @@ app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
     }
 });
 
-app.post('/enviar-formulario1', (req, res) => {
-    const { nome, raca, idade } = req.body;
+app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
+    const { nome, raca, idade} = req.body;
 
     if (nome && raca && idade) {
-        
-        console.log('Nome:', nome);
-        console.log('Raça:', raca);
-        console.log('Idade:', idade);
+        listapets.push({ nome, raca, idade });
 
-        res.send('Formulário enviado com sucesso!');
+        console.log('Animal cadastrado:', { nome, raca, idade });
+
+        
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Animal cadastrado</title>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 20px;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 400px;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 5px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #333;
+                        margin-bottom: 20px;
+                    }
+                    p {
+                        text-align: center;
+                        color: #666;
+                        margin-top: 20px;
+                    }
+                    .button-container {
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                    a.button {
+                        display: inline-block;
+                        margin: 10px;
+                        padding: 10px 20px;
+                        text-align: center;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        background-color: #28a745;
+                        transition: background-color 0.3s;
+                    }
+                    a.button:hover {
+                        background-color: #218838;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Usuário Cadastrado</h1>
+                    <p>O usuário ${nome} foi cadastrado com sucesso!</p>
+                    <div class="button-container">
+                        <a href="/" class="button">Voltar</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `);
     } else {
-        res.status(400).send('Por favor, preencha todos os campos do formulário.');
+        
+        res.status(400).send(`
+            <!DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Erro no Cadastro</title>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 20px;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 400px;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 5px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #dc3545;
+                        margin-bottom: 20px;
+                    }
+                    p {
+                        text-align: center;
+                        color: #dc3545;
+                        margin-top: 20px;
+                    }
+                    .button-container {
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                    a.button {
+                        display: inline-block;
+                        margin: 10px;
+                        padding: 10px 20px;
+                        text-align: center;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        background-color: #dc3545;
+                        transition: background-color 0.3s;
+                    }
+                    a.button:hover {
+                        background-color: #c82333;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Erro no Cadastro</h1>
+                    <p>Por favor, preencha todos os campos do formulário.</p>
+                    <div class="button-container">
+                        <a href="/forpets.html" class="button">Voltar</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `);
     }
 });
+
+
+
+
+
 
     function autenticarUsuario(requisicao, resposta) {
         const usuario = requisicao.body.usuario;
@@ -398,7 +530,9 @@ app.post('/enviar-formulario1', (req, res) => {
 
 
 
-    
+
+
+
     app.get('/listaPtes', usuarioEstaAutenticado, (req, resp) => {
         let conteudoResposta = `
         <!DOCTYPE html>
@@ -509,7 +643,7 @@ app.post('/enviar-formulario1', (req, res) => {
                 <div class="button-container">
                     <button type="submit" class="button">Executar ações selecionadas</button>
                     <a href="/" class="button voltar">Voltar</a>
-                    <a href="./forent.html" class="button cadastrar">Continuar Cadastrando</a>
+                    <a href="./forpets.html" class="button cadastrar">Continuar Cadastrando</a>
                 </div>
             </form>`;
     
