@@ -7,17 +7,20 @@ import cookieParser from 'cookie-parser';
 const host = '0.0.0.0';
 const porta = 3000;
 
+
+
 let listaUsuarios = [];
+let listapets = [];
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret: 'MinH4Ch4v3S3cr3t4', //chave para assinar os dados da sessão
-    resave: true, //salva a sessão a cada requisição HTTP
+    secret: 'MinH4Ch4v3S3cr3t4', 
+    resave: true, 
     saveUninitialized: true,
-    cookie: { //tempo de vida da sessão
-        maxAge: 1000 * 60 * 15 //15 minutos
+    cookie: { 
+        maxAge: 1000 * 60 * 15 
     }
 }));
 
@@ -32,25 +35,162 @@ function usuarioEstaAutenticado(requisicao, resposta, next){
     }
 }
 
-function cadastrarUsuario(requisicao, resposta){
-    const nome = requisicao.body.nome;
-    const email = requisicao.body.email;
-    const telefone = requisicao.body.telefone;
+app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
+    const { nome, email, telefone } = req.body;
 
-    if (nome && email && telefone) 
-    {
-        listaUsuarios.push({
-            nome: nome,
-            email: email,
-            telefone: telefone,
-        });
-        resposta.redirect('/listarUsuarios');
+    if (nome && email && telefone) {
+        listaUsuarios.push({ nome, email, telefone });
+
+        console.log('Usuário cadastrado:', { nome, email, telefone });
+
+        
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Usuário Cadastrado</title>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 20px;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 400px;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 5px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #333;
+                        margin-bottom: 20px;
+                    }
+                    p {
+                        text-align: center;
+                        color: #666;
+                        margin-top: 20px;
+                    }
+                    .button-container {
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                    a.button {
+                        display: inline-block;
+                        margin: 10px;
+                        padding: 10px 20px;
+                        text-align: center;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        background-color: #28a745;
+                        transition: background-color 0.3s;
+                    }
+                    a.button:hover {
+                        background-color: #218838;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Usuário Cadastrado</h1>
+                    <p>O usuário ${nome} foi cadastrado com sucesso!</p>
+                    <div class="button-container">
+                        <a href="/" class="button">Voltar</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `);
+    } else {
+        
+        res.status(400).send(`
+            <!DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Erro no Cadastro</title>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 20px;
+                        color: #333;
+                    }
+                    .container {
+                        max-width: 400px;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 5px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #dc3545;
+                        margin-bottom: 20px;
+                    }
+                    p {
+                        text-align: center;
+                        color: #dc3545;
+                        margin-top: 20px;
+                    }
+                    .button-container {
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                    a.button {
+                        display: inline-block;
+                        margin: 10px;
+                        padding: 10px 20px;
+                        text-align: center;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        background-color: #dc3545;
+                        transition: background-color 0.3s;
+                    }
+                    a.button:hover {
+                        background-color: #c82333;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Erro no Cadastro</h1>
+                    <p>Por favor, preencha todos os campos do formulário.</p>
+                    <div class="button-container">
+                        <a href="/forent.html" class="button">Voltar</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `);
     }
-    else{
-        resposta.write(`<script>alert('Por favor, preencha todos os campos.'); window.location.href = '/forent.html;</script>`);
-        resposta.end();
+});
+
+app.post('/enviar-formulario1', (req, res) => {
+    const { nome, raca, idade } = req.body;
+
+    if (nome && raca && idade) {
+        
+        console.log('Nome:', nome);
+        console.log('Raça:', raca);
+        console.log('Idade:', idade);
+
+        res.send('Formulário enviado com sucesso!');
+    } else {
+        res.status(400).send('Por favor, preencha todos os campos do formulário.');
     }
-    }
+});
 
     function autenticarUsuario(requisicao, resposta) {
         const usuario = requisicao.body.usuario;
@@ -134,7 +274,7 @@ function cadastrarUsuario(requisicao, resposta){
     
    
     
-    app.post('/cadastrarUsuario', usuarioEstaAutenticado, cadastrarUsuario);
+    app.post('/cadastrarUsuario', usuarioEstaAutenticado,);
 
     app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
         let conteudoResposta = `
@@ -214,14 +354,13 @@ function cadastrarUsuario(requisicao, resposta){
             </style>
         </head>
         <body>
-            <h1>Lista de Produtos</h1>
+            <h1>Lista de enteressados</h1>
             <table>
                 <thead>
                     <tr>
                         <th>nome</th>
                         <th>email</th>
                         <th>telefone</th>
-    
                     </tr>
                 </thead>
                 <tbody>`;
@@ -234,26 +373,186 @@ function cadastrarUsuario(requisicao, resposta){
                         <td>${listaUsuarios[i].telefone}</td>
                     </tr>`;
         }
-    
         conteudoResposta += `
                 </tbody>
             </table>
             <div class="button-container">
                 <a href="/" class="button voltar">Voltar</a>
-                <a href="./formulario.html" class="button cadastrar">Continuar Cadastrando</a>
+                <a href="./forent.html" class="button cadastrar">Continuar Cadastrando</a>
             </div>`;
         
         if (req.cookies.dataUltimoAcesso) {
             conteudoResposta += `
                 <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
         }
-    
         conteudoResposta += `
         </body>
         </html>`;
     
         resp.send(conteudoResposta);
     });
+
+    app.get('/listaPtes', usuarioEstaAutenticado, (req, resp) => {
+        let conteudoResposta = `
+        <!DOCTYPE html>
+        <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Lista de Interessados</title>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    background-color: #f8f9fa;
+                    margin: 0;
+                    padding: 20px;
+                    color: #333;
+                }
+                h1 {
+                    text-align: center;
+                    color: #333;
+                    margin-bottom: 30px;
+                }
+                table {
+                    width: 80%;
+                    margin: 0 auto;
+                    border-collapse: collapse;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                    background-color: #fff;
+                }
+                th, td {
+                    padding: 12px 15px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                th {
+                    background-color: #333;
+                    color: white;
+                    font-weight: bold;
+                }
+                tr:nth-child(even) {
+                    background-color: #f2f2f2;
+                }
+                tr:hover {
+                    background-color: #e9e9e9;
+                }
+                .button-container {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                a.button {
+                    display: inline-block;
+                    margin: 10px;
+                    padding: 10px 20px;
+                    text-align: center;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    transition: background-color 0.3s;
+                }
+                a.button.voltar {
+                    background-color: #007bff;
+                }
+                a.button.voltar:hover {
+                    background-color: #0056b3;
+                }
+                a.button.cadastrar {
+                    background-color: #28a745;
+                }
+                a.button.cadastrar:hover {
+                    background-color: #218838;
+                }
+                p {
+                    text-align: center;
+                    color: #666;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Lista de ptes para doação</h1>
+            <form action="/deletarUsuarios" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Raca</th>
+                            <th>Idade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+    
+        for (let i = 0; i < listapets.length; i++) {
+            conteudoResposta += `
+                        <tr>
+                            <td>${listapets[i].nome}</td>
+                            <td>${listapets[i].raca}</td>
+                            <td>${listapets[i].idade}</td>
+                            <td>
+                                <input type="checkbox" name="marcarExcluir" value="${i}"> Marcar para excluir
+                                <br>
+                                <input type="checkbox" name="marcarDoacao" value="${i}"> Marcar para doação
+                            </td>
+                        </tr>`;
+        }
+        conteudoResposta += `
+                    </tbody>
+                </table>
+                <div class="button-container">
+                    <button type="submit" class="button">Executar ações selecionadas</button>
+                    <a href="/" class="button voltar">Voltar</a>
+                    <a href="./forent.html" class="button cadastrar">Continuar Cadastrando</a>
+                </div>
+            </form>`;
+    
+        if (req.cookies.dataUltimoAcesso) {
+            conteudoResposta += `
+                <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
+        }
+        conteudoResposta += `
+        </body>
+        </html>`;
+    
+        resp.send(conteudoResposta);
+    });
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     app.listen(porta, host, () => {
         console.log(`Servidor rodando em http://${host}:${porta}`);
