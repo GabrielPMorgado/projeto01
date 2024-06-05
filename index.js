@@ -32,7 +32,7 @@ function usuarioEstaAutenticado(requisicao, resposta, next){
     }
 }
 
-function forent(requisicao, resposta){
+function cadastrarUsuario(requisicao, resposta){
     const nome = requisicao.body.nome;
     const email = requisicao.body.email;
     const telefone = requisicao.body.telefone;
@@ -52,71 +52,71 @@ function forent(requisicao, resposta){
     }
     }
 
-    function autenticarUsuario(requisicao, resposta){
+    function autenticarUsuario(requisicao, resposta) {
         const usuario = requisicao.body.usuario;
         const senha = requisicao.body.senha;
-        if (usuario == 'admin' && senha == '123'){
+        if (usuario == 'admin' && senha == '123') {
             requisicao.session.usuarioAutenticado = true;
-            resposta.cookie('dataUltimoAcesso', new Date().toLocaleString(),{
+            resposta.cookie('dataUltimoAcesso', new Date().toLocaleString(), {
                 httpOnly: true,
                 maxAge: 1000 * 60 * 60 * 24 * 30
             });
             resposta.redirect('/');
         } else {
-            resposta.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Falha ao realizar login</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        padding: 20px;
-                    }
-                    .container {
-                        max-width: 400px;
-                        margin: 0 auto;
-                        background-color: #fff;
-                        padding: 20px;
-                        border-radius: 5px;
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    }
-                    .error-message {
-                        color: #dc3545;
-                        font-weight: bold;
-                        margin-bottom: 10px;
-                    }
-                    .link {
-                        color: #007bff;
-                        text-decoration: underline;
-                        cursor: pointer;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1>Falha ao realizar login</h1>
-                    <p class="error-message">Usuário ou senha inválidos!</p>
-                    <a href="/login.html" class="link">Voltar</a>
-                    <div id="lastAccess"></div>
-                </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const lastAccess = document.getElementById('lastAccess');
-                        const lastAccessTime = '${requisicao.cookies.dataUltimoAcesso || ''}';
-                        if (lastAccessTime) {
-                            lastAccess.innerHTML = '<p>Seu último acesso foi em ' + lastAccessTime + '</p>';
+            resposta.send(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Falha ao realizar login</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            padding: 20px;
                         }
-                    });
-                </script>
-            </body>
-            </html>
+                        .container {
+                            max-width: 400px;
+                            margin: 0 auto;
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 5px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }
+                        .error-message {
+                            color: #dc3545;
+                            font-weight: bold;
+                            margin-bottom: 10px;
+                        }
+                        .link {
+                            color: #007bff;
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1>Falha ao realizar login</h1>
+                        <p class="error-message">Usuário ou senha inválidos!</p>
+                        <a href="/login.html" class="link">Voltar</a>
+                        <div id="lastAccess"></div>
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const lastAccess = document.getElementById('lastAccess');
+                            const lastAccessTime = '${requisicao.cookies.dataUltimoAcesso || ''}';
+                            if (lastAccessTime) {
+                                lastAccess.innerHTML = '<p>Seu último acesso foi em ' + lastAccessTime + '</p>';
+                            }
+                        });
+                    </script>
+                </body>
+                </html>
             `);
-            resposta.end();
         }
     }
+    
     app.post('/login', autenticarUsuario);
 
     app.get('/login', (req,resp)=>{
@@ -133,7 +133,7 @@ function forent(requisicao, resposta){
 
     app.use(usuarioEstaAutenticado,express.static(path.join(process.cwd(), 'protegido')));
     
-    app.post('/forent', usuarioEstaAutenticado, forent);
+    app.post('/cadastrarUsuario', usuarioEstaAutenticado, cadastrarUsuario);
 
     app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
         let conteudoResposta = `
