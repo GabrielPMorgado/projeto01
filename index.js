@@ -130,8 +130,9 @@ function cadastrarUsuario(requisicao, resposta){
     });
 
     app.use(express.static(path.join(process.cwd(), 'publico')));
-
     app.use(usuarioEstaAutenticado,express.static(path.join(process.cwd(), 'protegido')));
+    
+   
     
     app.post('/cadastrarUsuario', usuarioEstaAutenticado, cadastrarUsuario);
 
