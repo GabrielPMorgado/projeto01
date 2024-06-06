@@ -19,7 +19,7 @@
             background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             padding: 10px 0;
             position: fixed;
@@ -68,16 +68,38 @@
 
         @media (max-width: 768px) {
             .navbar {
+                flex-wrap: wrap;
                 padding: 10px;
             }
 
             .navbar a {
                 padding: 8px 15px;
-                margin: 0 5px;
+                margin: 5px 0;
+                flex-grow: 1;
+                text-align: center;
             }
 
             .content {
                 padding: 80px 10px 10px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar a {
+                padding: 6px 10px;
+                margin: 3px 0;
+                flex-grow: 1;
+                text-align: center;
+            }
+
+            .content {
+                padding: 60px 10px 10px;
+                width: 95%;
+            }
+
+            h1 {
+                font-size: 1.5em;
             }
         }
     </style>
@@ -86,14 +108,14 @@
     <div class="navbar">
         <a href="#home" class="active">Home</a>
         <a href="./forpets.html">Cadastro de pets</a>
-        <a href="./forent.html">Cadastro de enteressados</a>
-        <a href="/listarUsuarios">Visualizar enteressados</a>
-        <a href="/listarPtes">Visualizar de pets</a>
+        <a href="./forent.html">Cadastro de interessados</a>
+        <a href="/listarUsuarios">Visualizar interessados</a>
+        <a href="/listarPtes">Visualizar pets</a>
         <a href="logout">Sair</a>
     </div>
     <div class="content">
         <h1>Cadastro de pets</h1>
-        <p>Bem-vindo ao sistema de cadastro de pets. Use o menu acima para navegar pelas opções disponíveis.</p>
+        <p>Bem-vindo ao sistema de cadastro de pets e de doações. Use o menu acima para navegar pelas opções disponíveis.</p>
     </div>
 </body>
 </html>
