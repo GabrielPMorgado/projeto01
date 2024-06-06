@@ -11,12 +11,28 @@
             background-size: cover;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
         .container {
+            position: relative;
+            z-index: 2;
             max-width: 600px;
-            margin: 50px auto;
+            width: 100%;
+            margin: 20px;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Adicionando opacidade para melhorar a leitura */
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -33,6 +49,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
         .form-group button {
             padding: 10px 20px;
@@ -46,6 +63,7 @@
             background-color: #0056b3;
         }
         .btn-voltar {
+            display: inline-block;
             background-color: #ff3333;
             color: #fff;
             border: none;
@@ -53,7 +71,7 @@
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            margin-top: 10px;
         }
         .btn-voltar:hover {
             background-color: #cc0000;
@@ -61,15 +79,35 @@
         @media screen and (max-width: 768px) {
             .container {
                 max-width: 90%;
+                padding: 10px;
+            }
+            .form-group input {
+                padding: 8px;
+            }
+            .form-group button, .btn-voltar {
+                padding: 8px 16px;
+            }
+        }
+        @media screen and (max-width: 480px) {
+            .form-group label {
+                font-size: 14px;
+            }
+            .form-group input {
+                padding: 6px;
+            }
+            .form-group button, .btn-voltar {
+                padding: 6px 12px;
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
     <div class="container">
         <h2>Cadastro de Animais</h2>
 
-        <form  action="/listaPtes" method="POST">
+        <form action="/listaPtes" method="POST">
             <div class="form-group">
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome">
