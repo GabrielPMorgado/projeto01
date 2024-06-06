@@ -78,7 +78,7 @@ Após o login, o usuário pode acessar as seguintes opções no menu do sistema:
 
 1. Abra a aplicação no seu navegador.
 2. Faça login com as credenciais fornecidas.
-3. Usuario Admin
+3. Usuario admin
 4. Senha 123
 5. Navegue pelo menu para cadastrar interessados, cadastrar pets ou gerenciar solicitações de adoção.
 
