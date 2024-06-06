@@ -475,6 +475,16 @@ function autenticarUsuario(requisicao, resposta) {
                 .button.cadastrar:hover {
                     background-color: #218838;
                 }
+                .button.submit {
+                    background-color: #17a2b8;
+                }
+                .button.submit:hover {
+                    background-color: #138496;
+                }
+                .button.submit[disabled] {
+                    background-color: #cccccc;
+                    cursor: not-allowed;
+                }
                 p {
                     text-align: center;
                     color: #666;
@@ -523,32 +533,39 @@ function autenticarUsuario(requisicao, resposta) {
         </head>
         <body>
             <h1>Lista de Interessados</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Telefone</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+            <form id="usuariosForm" action="/associarPet" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Selecionar</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
         
         for (let i = 0; i < listaUsuarios.length; i++) {
             conteudoResposta += `
-                    <tr>
-                        <td data-label="Nome">${listaUsuarios[i].nome}</td>
-                        <td data-label="Email">${listaUsuarios[i].email}</td>
-                        <td data-label="Telefone">${listaUsuarios[i].telefone}</td>
-                    </tr>`;
+                        <tr>
+                            <td data-label="Nome">${listaUsuarios[i].nome}</td>
+                            <td data-label="Email">${listaUsuarios[i].email}</td>
+                            <td data-label="Telefone">${listaUsuarios[i].telefone}</td>
+                            <td data-label="Selecionar">
+                                <input type="checkbox" name="usuarioSelecionado" value="${i}" class="usuarioCheckbox"> Selecionar
+                            </td>
+                        </tr>`;
         }
         
         conteudoResposta += `
-                </tbody>
-            </table>
-            <div class="button-container">
-                <a href="/" class="button voltar">Voltar</a>
-                <a href="./forent.html" class="button cadastrar">Continuar Cadastrando</a>
-            </div>`;
+                    </tbody>
+                </table>
+                <div class="button-container">
+                    <button type="submit" class="button submit" id="submitBtn" disabled>Confirmar Doação</button>
+                    <a href="/" class="button voltar">Voltar</a>
+                    <a href="./forent.html" class="button cadastrar">Continuar Cadastrando</a>
+                </div>
+            </form>`;
         
         if (req.cookies.dataUltimoAcesso) {
             conteudoResposta += `
@@ -556,16 +573,45 @@ function autenticarUsuario(requisicao, resposta) {
         }
         
         conteudoResposta += `
+            <script>
+                const checkboxes = document.querySelectorAll('.usuarioCheckbox');
+                const submitBtn = document.getElementById('submitBtn');
+    
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        if (document.querySelectorAll('.usuarioCheckbox:checked').length > 0) {
+                            submitBtn.disabled = false;
+                        } else {
+                            submitBtn.disabled = true;
+                        }
+                    });
+                });
+    
+                document.getElementById('usuariosForm').addEventListener('submit', function(e) {
+                    const selectedCheckbox = document.querySelector('.usuarioCheckbox:checked');
+                    if (!selectedCheckbox) {
+                        e.preventDefault();
+                        alert('Por favor, selecione um usuário para confirmar a doação.');
+                    } else {
+                        alert('Pet foi doado para o usuário selecionado!');
+                    }
+                });
+            </script>
         </body>
         </html>`;
         
         resp.send(conteudoResposta);
     });
     
-
-
-
-
+    app.post('/associarPet', usuarioEstaAutenticado, (req, resp) => {
+        const { usuarioSelecionado } = req.body;
+        if (usuarioSelecionado) {
+            
+        }
+        resp.redirect('/listarUsuarios');
+    });
+    
+    
 
     app.get('/listarPtes', usuarioEstaAutenticado, (req, resp) => {
         let conteudoResposta = `
@@ -643,6 +689,10 @@ function autenticarUsuario(requisicao, resposta) {
                 .button.submit:hover {
                     background-color: #138496;
                 }
+                .button.submit[disabled] {
+                    background-color: #cccccc;
+                    cursor: not-allowed;
+                }
                 p {
                     text-align: center;
                     color: #666;
@@ -689,7 +739,7 @@ function autenticarUsuario(requisicao, resposta) {
         </head>
         <body>
             <h1>Lista de Pets para Doação</h1>
-            <form action="/deletarUsuarios" method="POST">
+            <form id="doacaoForm" action="/deletarUsuarios" method="POST">
                 <table>
                     <thead>
                         <tr>
@@ -708,9 +758,7 @@ function autenticarUsuario(requisicao, resposta) {
                             <td data-label="Raça">${listapets[i].raca}</td>
                             <td data-label="Idade">${listapets[i].idade}</td>
                             <td data-label="Ações">
-                                <input type="checkbox" name="marcarExcluir" value="${i}"> Excluir
-                                <br>
-                                <input type="checkbox" name="marcarDoacao" value="${i}"> Doação
+                                <input type="checkbox" name="marcarDoacao" value="${i}" class="doacaoCheckbox"> Doação
                             </td>
                         </tr>`;
         }
@@ -719,7 +767,7 @@ function autenticarUsuario(requisicao, resposta) {
                     </tbody>
                 </table>
                 <div class="button-container">
-                    <button type="submit" class="button submit">Executar ações selecionadas</button>
+                    <button type="submit" class="button submit" id="submitBtn" disabled>Executar ações selecionadas</button>
                     <a href="/" class="button voltar">Voltar</a>
                     <a href="./forpets.html" class="button cadastrar">Continuar Cadastrando</a>
                 </div>
@@ -731,12 +779,51 @@ function autenticarUsuario(requisicao, resposta) {
         }
         
         conteudoResposta += `
+            <script>
+                const checkboxes = document.querySelectorAll('.doacaoCheckbox');
+                const submitBtn = document.getElementById('submitBtn');
+    
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        if (document.querySelectorAll('.doacaoCheckbox:checked').length > 0) {
+                            submitBtn.disabled = false;
+                        } else {
+                            submitBtn.disabled = true;
+                        }
+                    });
+                });
+            </script>
         </body>
         </html>`;
         
         resp.send(conteudoResposta);
     });
     
+    app.post('/deletarUsuarios', usuarioEstaAutenticado, (req, resp) => {
+        const { marcarDoacao } = req.body;
+        if (Array.isArray(marcarDoacao)) {
+            marcarDoacao.forEach(index => {
+                
+            });
+        } else if (marcarDoacao) {
+        }
+        resp.redirect('/listarUsuarios');
+    });
+    
+    app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
+
+    });
+    
+
+    
+    
+    app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
+        // Código para listar os usuários cadastrados
+    });
+    
+
+
+   
 
 
     app.listen(porta, host, () => {
