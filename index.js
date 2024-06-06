@@ -8,7 +8,6 @@ const host = '0.0.0.0';
 const porta = 3000;
 
 
-
 let listaUsuarios = [];
 let listapets = [];
 
@@ -28,7 +27,7 @@ app.use(cookieParser());
 
 function usuarioEstaAutenticado(requisicao, resposta, next){
     if (requisicao.session.usuarioAutenticado){
-        next(); //permitir que a requisição continue a ser processada
+        next(); 
     }
     else{
         resposta.redirect('/login.html');
@@ -177,7 +176,7 @@ app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
     }
 });
 
-app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
+app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
     const { nome, raca, idade} = req.body;
 
     if (nome && raca && idade) {
@@ -533,7 +532,7 @@ app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
 
 
 
-    app.get('/listaPtes', usuarioEstaAutenticado, (req, resp) => {
+    app.get('/listarPtes', usuarioEstaAutenticado, (req, resp) => {
         let conteudoResposta = `
         <!DOCTYPE html>
         <html lang="pt-br">
@@ -658,41 +657,6 @@ app.post('/cadastrarUsuario', usuarioEstaAutenticado, (req, res) => {
         resp.send(conteudoResposta);
     });
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     app.listen(porta, host, () => {
