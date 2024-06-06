@@ -322,8 +322,7 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
 
 
 
-
-    function autenticarUsuario(requisicao, resposta) {
+function autenticarUsuario(requisicao, resposta) {
         const usuario = requisicao.body.usuario;
         const senha = requisicao.body.senha;
         if (usuario == 'admin' && senha == '123') {
@@ -396,7 +395,6 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
 
     app.get('/logout', (req, resp) => {
         req.session.destroy();
-        //req.session.usuarioLogado = false;
         resp.redirect('/login.html');
     });
 
@@ -414,7 +412,7 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Lista de Produtos</title>
+            <title>Lista de Interessados</title>
             <style>
                 body {
                     font-family: 'Arial', sans-serif;
@@ -429,7 +427,7 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     margin-bottom: 30px;
                 }
                 table {
-                    width: 80%;
+                    width: 100%;
                     margin: 0 auto;
                     border-collapse: collapse;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -455,7 +453,7 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     text-align: center;
                     margin-top: 20px;
                 }
-                a.button {
+                .button {
                     display: inline-block;
                     margin: 10px;
                     padding: 10px 20px;
@@ -465,16 +463,16 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     border-radius: 5px;
                     transition: background-color 0.3s;
                 }
-                a.button.voltar {
+                .button.voltar {
                     background-color: #007bff;
                 }
-                a.button.voltar:hover {
+                .button.voltar:hover {
                     background-color: #0056b3;
                 }
-                a.button.cadastrar {
+                .button.cadastrar {
                     background-color: #28a745;
                 }
-                a.button.cadastrar:hover {
+                .button.cadastrar:hover {
                     background-color: #218838;
                 }
                 p {
@@ -482,16 +480,52 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     color: #666;
                     margin-top: 20px;
                 }
+                @media screen and (max-width: 768px) {
+                    table, th, td {
+                        display: block;
+                        width: 100%;
+                    }
+                    th, td {
+                        box-sizing: border-box;
+                        padding: 10px;
+                    }
+                    th {
+                        position: absolute;
+                        top: -9999px;
+                        left: -9999px;
+                    }
+                    tr {
+                        margin-bottom: 10px;
+                        display: block;
+                        border: 1px solid #ddd;
+                    }
+                    td {
+                        display: block;
+                        text-align: right;
+                        border-bottom: 1px solid #ddd;
+                        position: relative;
+                        padding-left: 50%;
+                    }
+                    td:before {
+                        content: attr(data-label);
+                        position: absolute;
+                        left: 10px;
+                        width: calc(50% - 20px);
+                        padding-right: 10px;
+                        text-align: left;
+                        font-weight: bold;
+                    }
+                }
             </style>
         </head>
         <body>
-            <h1>Lista de enteressados</h1>
+            <h1>Lista de Interessados</h1>
             <table>
                 <thead>
                     <tr>
-                        <th>nome</th>
-                        <th>email</th>
-                        <th>telefone</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -499,11 +533,12 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
         for (let i = 0; i < listaUsuarios.length; i++) {
             conteudoResposta += `
                     <tr>
-                        <td>${listaUsuarios[i].nome}</td>
-                        <td>${listaUsuarios[i].email}</td>
-                        <td>${listaUsuarios[i].telefone}</td>
+                        <td data-label="Nome">${listaUsuarios[i].nome}</td>
+                        <td data-label="Email">${listaUsuarios[i].email}</td>
+                        <td data-label="Telefone">${listaUsuarios[i].telefone}</td>
                     </tr>`;
         }
+        
         conteudoResposta += `
                 </tbody>
             </table>
@@ -519,14 +554,10 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
         conteudoResposta += `
         </body>
         </html>`;
-    
+        
         resp.send(conteudoResposta);
     });
-
-
-
-
-
+    
 
 
 
@@ -554,7 +585,7 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     margin-bottom: 30px;
                 }
                 table {
-                    width: 80%;
+                    width: 100%;
                     margin: 0 auto;
                     border-collapse: collapse;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -580,7 +611,7 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     text-align: center;
                     margin-top: 20px;
                 }
-                a.button {
+                .button {
                     display: inline-block;
                     margin: 10px;
                     padding: 10px 20px;
@@ -590,33 +621,75 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
                     border-radius: 5px;
                     transition: background-color 0.3s;
                 }
-                a.button.voltar {
+                .button.voltar {
                     background-color: #007bff;
                 }
-                a.button.voltar:hover {
+                .button.voltar:hover {
                     background-color: #0056b3;
                 }
-                a.button.cadastrar {
+                .button.cadastrar {
                     background-color: #28a745;
                 }
-                a.button.cadastrar:hover {
+                .button.cadastrar:hover {
                     background-color: #218838;
+                }
+                .button.submit {
+                    background-color: #17a2b8;
+                }
+                .button.submit:hover {
+                    background-color: #138496;
                 }
                 p {
                     text-align: center;
                     color: #666;
                     margin-top: 20px;
                 }
+                @media screen and (max-width: 768px) {
+                    table, th, td {
+                        display: block;
+                        width: 100%;
+                    }
+                    th, td {
+                        box-sizing: border-box;
+                        padding: 10px;
+                    }
+                    th {
+                        position: absolute;
+                        top: -9999px;
+                        left: -9999px;
+                    }
+                    tr {
+                        margin-bottom: 10px;
+                        display: block;
+                        border: 1px solid #ddd;
+                    }
+                    td {
+                        display: block;
+                        text-align: right;
+                        border-bottom: 1px solid #ddd;
+                        position: relative;
+                        padding-left: 50%;
+                    }
+                    td:before {
+                        content: attr(data-label);
+                        position: absolute;
+                        left: 10px;
+                        width: calc(50% - 20px);
+                        padding-right: 10px;
+                        text-align: left;
+                        font-weight: bold;
+                    }
+                }
             </style>
         </head>
         <body>
-            <h1>Lista de ptes para doação</h1>
+            <h1>Lista de Pets para Doação</h1>
             <form action="/deletarUsuarios" method="POST">
                 <table>
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Raca</th>
+                            <th>Raça</th>
                             <th>Idade</th>
                             <th>Ações</th>
                         </tr>
@@ -626,21 +699,22 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
         for (let i = 0; i < listapets.length; i++) {
             conteudoResposta += `
                         <tr>
-                            <td>${listapets[i].nome}</td>
-                            <td>${listapets[i].raca}</td>
-                            <td>${listapets[i].idade}</td>
-                            <td>
-                                <input type="checkbox" name="marcarExcluir" value="${i}"> Marcar para excluir
+                            <td data-label="Nome">${listapets[i].nome}</td>
+                            <td data-label="Raça">${listapets[i].raca}</td>
+                            <td data-label="Idade">${listapets[i].idade}</td>
+                            <td data-label="Ações">
+                                <input type="checkbox" name="marcarExcluir" value="${i}"> Excluir
                                 <br>
-                                <input type="checkbox" name="marcarDoacao" value="${i}"> Marcar para doação
+                                <input type="checkbox" name="marcarDoacao" value="${i}"> Doação
                             </td>
                         </tr>`;
         }
+    
         conteudoResposta += `
                     </tbody>
                 </table>
                 <div class="button-container">
-                    <button type="submit" class="button">Executar ações selecionadas</button>
+                    <button type="submit" class="button submit">Executar ações selecionadas</button>
                     <a href="/" class="button voltar">Voltar</a>
                     <a href="./forpets.html" class="button cadastrar">Continuar Cadastrando</a>
                 </div>
@@ -648,8 +722,9 @@ app.post('/listaPtes', usuarioEstaAutenticado, (req, res) => {
     
         if (req.cookies.dataUltimoAcesso) {
             conteudoResposta += `
-                <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
+            <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
         }
+    
         conteudoResposta += `
         </body>
         </html>`;
