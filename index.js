@@ -822,10 +822,6 @@ function autenticarUsuario(requisicao, resposta) {
     });
     
 
-
-   
-
-
     app.listen(porta, host, () => {
         console.log(`Servidor rodando em http://${host}:${porta}`);
     });
