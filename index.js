@@ -485,14 +485,8 @@ function autenticarUsuario(requisicao, resposta) {
                         display: block;
                         width: 100%;
                     }
-                    th, td {
-                        box-sizing: border-box;
-                        padding: 10px;
-                    }
                     th {
-                        position: absolute;
-                        top: -9999px;
-                        left: -9999px;
+                        display: none;
                     }
                     tr {
                         margin-bottom: 10px;
@@ -514,6 +508,15 @@ function autenticarUsuario(requisicao, resposta) {
                         padding-right: 10px;
                         text-align: left;
                         font-weight: bold;
+                    }
+                    .button-container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    .button {
+                        width: 80%;
+                        margin-bottom: 10px;
                     }
                 }
             </style>
@@ -551,6 +554,7 @@ function autenticarUsuario(requisicao, resposta) {
             conteudoResposta += `
                 <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
         }
+        
         conteudoResposta += `
         </body>
         </html>`;
@@ -649,14 +653,8 @@ function autenticarUsuario(requisicao, resposta) {
                         display: block;
                         width: 100%;
                     }
-                    th, td {
-                        box-sizing: border-box;
-                        padding: 10px;
-                    }
                     th {
-                        position: absolute;
-                        top: -9999px;
-                        left: -9999px;
+                        display: none;
                     }
                     tr {
                         margin-bottom: 10px;
@@ -679,6 +677,13 @@ function autenticarUsuario(requisicao, resposta) {
                         text-align: left;
                         font-weight: bold;
                     }
+                    .button-container {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .button {
+                        margin-bottom: 10px;
+                    }
                 }
             </style>
         </head>
@@ -695,7 +700,7 @@ function autenticarUsuario(requisicao, resposta) {
                         </tr>
                     </thead>
                     <tbody>`;
-    
+        
         for (let i = 0; i < listapets.length; i++) {
             conteudoResposta += `
                         <tr>
@@ -709,7 +714,7 @@ function autenticarUsuario(requisicao, resposta) {
                             </td>
                         </tr>`;
         }
-    
+        
         conteudoResposta += `
                     </tbody>
                 </table>
@@ -719,16 +724,16 @@ function autenticarUsuario(requisicao, resposta) {
                     <a href="./forpets.html" class="button cadastrar">Continuar Cadastrando</a>
                 </div>
             </form>`;
-    
+        
         if (req.cookies.dataUltimoAcesso) {
             conteudoResposta += `
             <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
         }
-    
+        
         conteudoResposta += `
         </body>
         </html>`;
-    
+        
         resp.send(conteudoResposta);
     });
     
